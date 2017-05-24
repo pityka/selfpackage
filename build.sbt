@@ -1,16 +1,16 @@
 lazy val commonSettings = Seq(
     organization := "io.github.pityka",
-    scalaVersion := "2.11.8",
+    scalaVersion := "2.11.11",
+    crossScalaVersions := Seq("2.12.2","2.11.11"),
     version := "0.0.1"
-  ) ++ reformatOnCompileSettings
+  ) //++ reformatOnCompileSettings
 
 lazy val root = (project in file("."))
   .settings(commonSettings: _*)
   .settings(
     name := "selfpackage",
     libraryDependencies ++= Seq(
-      "io.github.lukehutch" % "fast-classpath-scanner" % "2.0.19",
-      "org.scalatest" %% "scalatest" % "2.1.5" % "test"),
+      "io.github.lukehutch" % "fast-classpath-scanner" % "2.0.19"),
     licenses += ("MIT", url("http://opensource.org/licenses/MIT")),
     pomExtra in Global := {
       <url>https://pityka.github.io/selfpackage/</url>
