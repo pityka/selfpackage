@@ -121,7 +121,7 @@ package object selfpackage {
         esac
       done
 
-      if [[ no_more_snp_opts ]]; then
+      if [[ $no_more_snp_opts ]]; then
         while [[ $# -gt 0 ]]; do
           addResidual "$1" && shift
         done

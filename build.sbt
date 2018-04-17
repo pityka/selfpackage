@@ -2,7 +2,7 @@ lazy val commonSettings = Seq(
     organization := "io.github.pityka",
     scalaVersion := "2.11.11",
     crossScalaVersions := Seq("2.12.2","2.11.11"),
-    version := "0.0.1"
+    version := "1.0.1"
   ) //++ reformatOnCompileSettings
 
 lazy val root = (project in file("."))
