@@ -30,7 +30,7 @@ package object selfpackage {
         // Find the relative path on the class path
         val fileNameInJar = {
           val fa = file.getAbsolutePath
-          fa.drop(removePrefix.size)
+          fa.drop(removePrefix.size).dropWhile(_ == '/')
         }
         jos.putNextEntry(new JarEntry(fileNameInJar));
         var c = br.read
@@ -51,8 +51,10 @@ package object selfpackage {
     out
   }
 
-  def write(out: File, threadName :String = "main"): Unit = {
-    val mainClassName = mainClass(threadName).getOrElse(throw new RuntimeException(s"Thread with name $threadName not found."))
+  def write(out: File, mainClassNameArg : Option[String] = None): Unit = {
+    val mainClassName = mainClassNameArg.getOrElse{
+      mainClass("thread").getOrElse(throw new RuntimeException("Thread with name main not found. Can't infer main class name."))
+    }
     val classpathFolders = ClassLoader.getSystemClassLoader
       .asInstanceOf[java.net.URLClassLoader]
       .getURLs
@@ -70,7 +72,7 @@ package object selfpackage {
     val jarFromFolders = folders.zipWithIndex.map {
       case (folder, idx) =>
         val root =
-          classpathFolders.find(x => folder.getAbsolutePath.startsWith(x)).get
+          classpathFolders.find(x => folder.getAbsolutePath.startsWith(x)).getOrElse(folder.getAbsolutePath)
         writeJar(folder,
                  new File(tmp.getAbsolutePath + "." + idx + ".jar"),
                  root)
