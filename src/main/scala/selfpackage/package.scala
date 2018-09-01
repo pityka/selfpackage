@@ -9,8 +9,8 @@ import java.nio.file.attribute._
 
 package object selfpackage {
 
-  def mainClass: Option[String] =
-    Thread.getAllStackTraces.asScala.find(_._1.getName == "main").map {
+  def mainClass(threadName: String): Option[String] =
+    Thread.getAllStackTraces.asScala.find(_._1.getName == threadName).map {
       case (threadName, stackTrace) =>
         stackTrace.last.getClassName
     }
@@ -51,8 +51,8 @@ package object selfpackage {
     out
   }
 
-  def write(out: File): Unit = {
-    val mainClassName = mainClass.get
+  def write(out: File, threadName :String = "main"): Unit = {
+    val mainClassName = mainClass(threadName).getOrElse(throw new RuntimeException(s"Thread with name $threadName not found."))
     val classpathFolders = ClassLoader.getSystemClassLoader
       .asInstanceOf[java.net.URLClassLoader]
       .getURLs
