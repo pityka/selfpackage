@@ -53,7 +53,7 @@ package object selfpackage {
 
   def write(out: File, mainClassNameArg : Option[String] = None): Unit = {
     val mainClassName = mainClassNameArg.getOrElse{
-      mainClass("thread").getOrElse(throw new RuntimeException("Thread with name main not found. Can't infer main class name."))
+      mainClass("main").getOrElse(throw new RuntimeException("Thread with name main not found. Can't infer main class name."))
     }
     val classpathFolders = ClassLoader.getSystemClassLoader
       .asInstanceOf[java.net.URLClassLoader]
