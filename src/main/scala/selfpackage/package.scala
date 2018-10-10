@@ -93,6 +93,7 @@ package object selfpackage {
     val fos = new BufferedOutputStream(new FileOutputStream(tmp))
     fos.write(selfExtraction.getBytes("UTF-8"))
     val zos = new ZipOutputStream(fos);
+    zos.setLevel(0)
     val libs = (jarFromFolders ++ files).map { file =>
       val br = new BufferedInputStream(new FileInputStream(file))
 
