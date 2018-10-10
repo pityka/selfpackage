@@ -18,6 +18,15 @@ package object selfpackage {
   def commonprefix(s1: String, s2: String) =
     s1 zip s2 takeWhile (x => x._1 == x._2)
 
+  def copy(is:InputStream, os:OutputStream, bufferSize:Int) : Unit = {
+    val buffer = Array.ofDim[Byte](bufferSize)
+    var count = is.read(buffer)
+    while (count != -1) {
+      os.write(buffer,0,count)
+      count = is.read(buffer)
+    }
+  }
+
   def writeJar(input: File, out: File, removePrefix: String): File = {
     val tmp = File.createTempFile("self", "")
 
@@ -33,11 +42,7 @@ package object selfpackage {
           fa.drop(removePrefix.size).dropWhile(_ == '/')
         }
         jos.putNextEntry(new JarEntry(fileNameInJar));
-        var c = br.read
-        while (c != -1) {
-          jos.write(c);
-          c = br.read
-        }
+        copy(br,jos,8192)
         br.close
         jos.closeEntry
         FileVisitResult.CONTINUE
