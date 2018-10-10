@@ -97,11 +97,7 @@ package object selfpackage {
       val br = new BufferedInputStream(new FileInputStream(file))
 
       zos.putNextEntry(new ZipEntry("lib/" + file.getName));
-      var c = br.read
-      while (c != -1) {
-        zos.write(c);
-        c = br.read
-      }
+      copy(br,zos,8192)      
       br.close
       zos.closeEntry
       "lib/" + file.getName
