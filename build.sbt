@@ -12,6 +12,7 @@ lazy val root = (project in file("."))
     libraryDependencies ++= Seq(
       "io.github.lukehutch" % "fast-classpath-scanner" % "2.0.19"),
     licenses += ("MIT", url("http://opensource.org/licenses/MIT")),
+    publishTo := sonatypePublishTo.value,
     pomExtra in Global := {
       <url>https://pityka.github.io/selfpackage/</url>
      <scm>
