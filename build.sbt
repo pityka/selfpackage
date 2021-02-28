@@ -2,7 +2,7 @@ lazy val commonSettings = Seq(
   organization := "io.github.pityka",
   scalaVersion := "2.13.5",
   version := "1.2.4",
-  publishTo := sonatypePublishToBundle.value,
+  publishTo := sonatypePublishTo.value,
   libraryDependencies += "org.scala-lang.modules" %% "scala-parallel-collections" % "1.0.0"
 )
 
@@ -40,3 +40,5 @@ lazy val testProject = (project in file("test"))
   )
   .dependsOn(root)
   .enablePlugins(JavaAppPackaging)
+
+Global / useGpg := false
