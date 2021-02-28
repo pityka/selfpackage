@@ -1,16 +1,18 @@
 lazy val commonSettings = Seq(
-    organization := "io.github.pityka",
-    scalaVersion := "2.12.6",
-    crossScalaVersions := Seq("2.11.11"),
-    version := "1.2.3"
-  )
+  organization := "io.github.pityka",
+  scalaVersion := "2.13.5",
+  version := "1.2.4",
+  publishTo := sonatypePublishToBundle.value,
+  libraryDependencies += "org.scala-lang.modules" %% "scala-parallel-collections" % "1.0.0"
+)
 
 lazy val root = (project in file("."))
   .settings(commonSettings: _*)
   .settings(
     name := "selfpackage",
     libraryDependencies ++= Seq(
-      "io.github.lukehutch" % "fast-classpath-scanner" % "2.0.19"),
+      "io.github.lukehutch" % "fast-classpath-scanner" % "2.0.19"
+    ),
     licenses += ("MIT", url("http://opensource.org/licenses/MIT")),
     publishTo := sonatypePublishTo.value,
     pomExtra in Global := {

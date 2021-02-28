@@ -6,6 +6,8 @@ import scala.collection.JavaConverters._
 import scala.util._
 import java.nio.file._
 import java.nio.file.attribute._
+import scala.collection.parallel.CollectionConverters._
+import scala.language.postfixOps
 
 package object selfpackage {
 
@@ -18,11 +20,11 @@ package object selfpackage {
   def commonprefix(s1: String, s2: String) =
     s1 zip s2 takeWhile (x => x._1 == x._2)
 
-  def copy(is:InputStream, os:OutputStream, bufferSize:Int) : Unit = {
+  def copy(is: InputStream, os: OutputStream, bufferSize: Int): Unit = {
     val buffer = Array.ofDim[Byte](bufferSize)
     var count = is.read(buffer)
     while (count != -1) {
-      os.write(buffer,0,count)
+      os.write(buffer, 0, count)
       count = is.read(buffer)
     }
   }
@@ -42,7 +44,7 @@ package object selfpackage {
           fa.drop(removePrefix.size).dropWhile(_ == '/')
         }
         jos.putNextEntry(new JarEntry(fileNameInJar));
-        copy(br,jos,8192)
+        copy(br, jos, 8192)
         br.close
         jos.closeEntry
         FileVisitResult.CONTINUE
@@ -56,9 +58,13 @@ package object selfpackage {
     out
   }
 
-  def write(out: File, mainClassNameArg : Option[String] = None): Unit = {
-    val mainClassName = mainClassNameArg.getOrElse{
-      mainClass("main").getOrElse(throw new RuntimeException("Thread with name main not found. Can't infer main class name."))
+  def write(out: File, mainClassNameArg: Option[String] = None): Unit = {
+    val mainClassName = mainClassNameArg.getOrElse {
+      mainClass("main").getOrElse(
+        throw new RuntimeException(
+          "Thread with name main not found. Can't infer main class name."
+        )
+      )
     }
     val classpathFolders = ClassLoader.getSystemClassLoader
       .asInstanceOf[java.net.URLClassLoader]
@@ -74,13 +80,12 @@ package object selfpackage {
     val files = classpathFilesOrFolders.filter(_.isFile)
     val folders = classpathFilesOrFolders.filter(_.isDirectory)
 
-    val jarFromFolders = folders.zipWithIndex.par.map {
-      case (folder, idx) =>
-        val root =
-          classpathFolders.find(x => folder.getAbsolutePath.startsWith(x)).getOrElse(folder.getAbsolutePath)
-        writeJar(folder,
-                 new File(tmp.getAbsolutePath + "." + idx + ".jar"),
-                 root)
+    val jarFromFolders = folders.zipWithIndex.par.map { case (folder, idx) =>
+      val root =
+        classpathFolders
+          .find(x => folder.getAbsolutePath.startsWith(x))
+          .getOrElse(folder.getAbsolutePath)
+      writeJar(folder, new File(tmp.getAbsolutePath + "." + idx + ".jar"), root)
     } seq
 
     val selfExtraction = """|#!/usr/bin/env bash
@@ -98,7 +103,7 @@ package object selfpackage {
       val br = new BufferedInputStream(new FileInputStream(file))
 
       zos.putNextEntry(new ZipEntry("lib/" + file.getName));
-      copy(br,zos,8192)      
+      copy(br, zos, 8192)
       br.close
       zos.closeEntry
       "lib/" + file.getName
