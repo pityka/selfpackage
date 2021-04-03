@@ -1,9 +1,28 @@
+inThisBuild(
+  List(
+    organization := "io.github.pityka",
+    homepage := Some(url("https://pityka.github.io/selfpackage/")),
+    licenses := List(("MIT", url("https://opensource.org/licenses/MIT"))),
+    developers := List(
+      Developer(
+        "pityka",
+        "Istvan Bartha",
+        "bartha.pityu@gmail.com",
+        url("https://github.com/pityka/selfpackage")
+      )
+    )
+  )
+)
+
 lazy val commonSettings = Seq(
   organization := "io.github.pityka",
   scalaVersion := "2.13.5",
-  version := "1.2.4",
-  publishTo := sonatypePublishTo.value,
-  libraryDependencies += "org.scala-lang.modules" %% "scala-parallel-collections" % "1.0.0"
+  crossScalaVersions := Seq("2.12.13", "2.13.5"),
+  libraryDependencies ++= (scalaVersion.value match {
+    case "2.12.13" => Nil
+    case "2.13.5" =>
+      List("org.scala-lang.modules" %% "scala-parallel-collections" % "1.0.0")
+  })
 )
 
 lazy val root = (project in file("."))
@@ -12,33 +31,15 @@ lazy val root = (project in file("."))
     name := "selfpackage",
     libraryDependencies ++= Seq(
       "io.github.lukehutch" % "fast-classpath-scanner" % "2.0.19"
-    ),
-    licenses += ("MIT", url("http://opensource.org/licenses/MIT")),
-    publishTo := sonatypePublishTo.value,
-    pomExtra in Global := {
-      <url>https://pityka.github.io/selfpackage/</url>
-     <scm>
-       <connection>scm:git:github.com/pityka/selfpackage</connection>
-       <developerConnection>scm:git:git@github.com:pityka/selfpackage</developerConnection>
-       <url>github.com/pityka/selfpackage</url>
-     </scm>
-     <developers>
-       <developer>
-         <id>pityka</id>
-         <name>Istvan Bartha</name>
-         <url>https://pityka.github.io/selfpackage/</url>
-       </developer>
-     </developers>
-    }
+    )
   )
 
 lazy val testProject = (project in file("test"))
   .settings(commonSettings: _*)
   .settings(
     name := "selfpackage-test",
-    publishArtifact := false
+    publishArtifact := false,
+    skip in publish := true
   )
   .dependsOn(root)
   .enablePlugins(JavaAppPackaging)
-
-Global / useGpg := false

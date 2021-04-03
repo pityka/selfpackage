@@ -6,10 +6,27 @@ import scala.collection.JavaConverters._
 import scala.util._
 import java.nio.file._
 import java.nio.file.attribute._
-import scala.collection.parallel.CollectionConverters._
 import scala.language.postfixOps
 
 package object selfpackage {
+
+  private[selfpackage] object CompatParColls {
+    val Converters = {
+      import Compat._
+
+      {
+        import scala.collection.parallel._
+
+        CollectionConverters
+      }
+    }
+
+    object Compat {
+      object CollectionConverters
+    }
+  }
+
+  import CompatParColls.Converters._
 
   def mainClass(threadName: String): Option[String] =
     Thread.getAllStackTraces.asScala.find(_._1.getName == threadName).map {
