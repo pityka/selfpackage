@@ -8,7 +8,8 @@ object MyApp extends App {
   println("App args: " + args.mkString("\"", "\",\"", "\""))
   println(
     "JVM args: " + ManagementFactory.getRuntimeMXBean.getInputArguments.asScala
-      .mkString("\"", "\",\"", "\""))
+      .mkString("\"", "\",\"", "\"")
+  )
 
   println("Packaging..")
   selfpackage.write(new java.io.File("me"))
