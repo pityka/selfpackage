@@ -30,7 +30,7 @@ lazy val root = (project in file("."))
   .settings(
     name := "selfpackage",
     libraryDependencies ++= Seq(
-      "io.github.lukehutch" % "fast-classpath-scanner" % "2.0.21"
+      "io.github.lukehutch" % "fast-classpath-scanner" % "2.21"
     )
   )
 
