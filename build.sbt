@@ -15,9 +15,11 @@ inThisBuild(
 )
 
 lazy val commonSettings = Seq(
-  organization := "io.github.pityka",
   scalaVersion := "2.13.5",
   crossScalaVersions := Seq("2.12.13", "2.13.5"),
+  mimaPreviousArtifacts := Set(
+    organization.value %% moduleName.value % "1.2.5"
+  ),
   libraryDependencies ++= (scalaVersion.value match {
     case "2.12.13" => Nil
     case "2.13.5" =>
