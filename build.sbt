@@ -23,7 +23,7 @@ lazy val commonSettings = Seq(
   libraryDependencies ++= (scalaVersion.value match {
     case "2.12.13" => Nil
     case "2.13.5" =>
-      List("org.scala-lang.modules" %% "scala-parallel-collections" % "1.0.2")
+      List("org.scala-lang.modules" %% "scala-parallel-collections" % "1.0.3")
   })
 )
 
