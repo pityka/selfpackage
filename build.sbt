@@ -16,7 +16,7 @@ inThisBuild(
 
 lazy val commonSettings = Seq(
   scalaVersion := "2.13.5",
-  crossScalaVersions := Seq("2.12.13", "2.13.5"),
+  crossScalaVersions := Seq("2.12.14", "2.13.5"),
   mimaPreviousArtifacts := Set(
     organization.value %% moduleName.value % "1.2.5"
   ),
