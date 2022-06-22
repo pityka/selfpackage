@@ -15,15 +15,15 @@ inThisBuild(
 )
 
 lazy val commonSettings = Seq(
-  scalaVersion := "2.13.5",
-  crossScalaVersions := Seq("2.12.14", "2.13.5"),
+  scalaVersion := "2.13.8",
+  crossScalaVersions := Seq("2.12.16", "2.13.8"),
   mimaPreviousArtifacts := Set(
     organization.value %% moduleName.value % "1.2.5"
   ),
   libraryDependencies ++= (scalaVersion.value match {
-    case "2.12.13" => Nil
-    case "2.13.5" =>
-      List("org.scala-lang.modules" %% "scala-parallel-collections" % "1.0.3")
+    case "2.12.16" => Nil
+    case "2.13.8" =>
+      List("org.scala-lang.modules" %% "scala-parallel-collections" % "1.0.2")
   })
 )
 
@@ -32,7 +32,7 @@ lazy val root = (project in file("."))
   .settings(
     name := "selfpackage",
     libraryDependencies ++= Seq(
-      "io.github.lukehutch" % "fast-classpath-scanner" % "2.0.21"
+      "io.github.classgraph" % "classgraph" % "4.8.147"
     )
   )
 

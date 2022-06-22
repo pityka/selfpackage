@@ -1,4 +1,4 @@
-import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner
+import io.github.classgraph.ClassGraph
 import java.io._
 import java.util.jar._
 import java.util.zip._
@@ -83,14 +83,9 @@ package object selfpackage {
         )
       )
     }
-    val classpathFolders = ClassLoader.getSystemClassLoader
-      .asInstanceOf[java.net.URLClassLoader]
-      .getURLs
-      .map(_.toString.stripPrefix("file:"))
-      .toList
 
     val classpathFilesOrFolders =
-      (new FastClasspathScanner()).getUniqueClasspathElements.asScala
+      (new ClassGraph()).getClasspathFiles.asScala
 
     val tmp = File.createTempFile("self", "")
 
@@ -98,11 +93,7 @@ package object selfpackage {
     val folders = classpathFilesOrFolders.filter(_.isDirectory)
 
     val jarFromFolders = folders.zipWithIndex.par.map { case (folder, idx) =>
-      val root =
-        classpathFolders
-          .find(x => folder.getAbsolutePath.startsWith(x))
-          .getOrElse(folder.getAbsolutePath)
-      writeJar(folder, new File(tmp.getAbsolutePath + "." + idx + ".jar"), root)
+      writeJar(folder, new File(tmp.getAbsolutePath + "." + idx + ".jar"), folder.getAbsolutePath())
     } seq
 
     val selfExtraction = """|#!/usr/bin/env bash
