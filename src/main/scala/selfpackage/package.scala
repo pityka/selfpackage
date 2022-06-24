@@ -97,9 +97,11 @@ package object selfpackage {
     } seq
 
     val selfExtraction = """|#!/usr/bin/env bash
-    |mkdir -p $0-extract
-    |unzip -o  $0 -d $0-extract 2> /dev/null 1> /dev/null
-    |chmod u+x $0-extract/entrypoint
+    |set -e 
+    |mkdir -p $0-extract 
+    |which -s unzip && : || (echo 'unzip not found' && false)
+    |unzip -o  $0 -d $0-extract 2> /dev/null 1> /dev/null || true
+    |chmod u+x $0-extract/entrypoint 
     |exec $0-extract/entrypoint $@
     """.stripMargin
 
