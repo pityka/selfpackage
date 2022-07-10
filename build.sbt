@@ -32,7 +32,7 @@ lazy val root = (project in file("."))
   .settings(
     name := "selfpackage",
     libraryDependencies ++= Seq(
-      "io.github.classgraph" % "classgraph" % "4.8.147"
+      "io.github.classgraph" % "classgraph" % "4.8.149"
     )
   )
 
