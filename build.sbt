@@ -16,15 +16,13 @@ inThisBuild(
 
 lazy val commonSettings = Seq(
   scalaVersion := "2.13.8",
-  crossScalaVersions := Seq("2.12.16", "2.13.8"),
+  crossScalaVersions := Seq("2.13.13", "3.3.3"),
   mimaPreviousArtifacts := Set(
     organization.value %% moduleName.value % "1.2.5"
   ),
-  libraryDependencies ++= (scalaVersion.value match {
-    case "2.12.16" => Nil
-    case "2.13.8" =>
-      List("org.scala-lang.modules" %% "scala-parallel-collections" % "1.0.2")
-  })
+  libraryDependencies ++= List(
+    "org.scala-lang.modules" %% "scala-parallel-collections" % "1.0.4"
+  )
 )
 
 lazy val root = (project in file("."))
