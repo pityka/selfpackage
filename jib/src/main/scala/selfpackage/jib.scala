@@ -89,7 +89,7 @@ object jib {
     val tmpFolder = java.io.File.createTempFile("entrypoint", "folder")
     tmpFolder.delete()
     assert(tmpFolder.mkdir())
-    val scriptTmp = new File(tmpFolder,"entrypoint.sh")
+    val scriptTmp = new File(tmpFolder, "entrypoint.sh")
 
     java.nio.file.Files.writeString(scriptTmp.toPath(), script)
 
@@ -113,8 +113,8 @@ object jib {
       .setEntrypoint("bash", "/app/entrypoint.sh")
       .containerize(out);
 
-      scriptTmp.delete()
-      jarFromFolders.foreach(_.delete)
+    scriptTmp.delete()
+    jarFromFolders.foreach(_.delete)
   }
 
 }

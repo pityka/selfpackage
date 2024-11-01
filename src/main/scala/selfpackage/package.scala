@@ -93,7 +93,11 @@ package object selfpackage {
     val folders = classpathFilesOrFolders.filter(_.isDirectory)
 
     val jarFromFolders = folders.zipWithIndex.par.map { case (folder, idx) =>
-      writeJar(folder, new File(tmp.getAbsolutePath + "." + idx + ".jar"), folder.getAbsolutePath())
+      writeJar(
+        folder,
+        new File(tmp.getAbsolutePath + "." + idx + ".jar"),
+        folder.getAbsolutePath()
+      )
     } seq
 
     val selfExtraction = """|#!/usr/bin/env bash
