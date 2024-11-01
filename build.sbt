@@ -28,7 +28,13 @@ lazy val commonSettings = Seq(
   )
 )
 
-lazy val root = (project in file("."))
+lazy val root = project.in(file(".")).settings(commonSettings:_*)
+.settings(
+  publish/skip := true,
+  name := "selfpackage-root"
+).aggregate(core,jib)
+
+lazy val core = (project in file("core"))
   .settings(commonSettings: _*)
   .settings(
     name := "selfpackage",
@@ -45,7 +51,7 @@ lazy val jib = (project in file("jib"))
     libraryDependencies ++= Seq(
      "com.google.cloud.tools" %"jib-core"% "0.27.2"
     )
-  ).dependsOn(root)
+  ).dependsOn(core)
 
 lazy val testProject = (project in file("test"))
   .settings(commonSettings: _*)
@@ -54,6 +60,6 @@ lazy val testProject = (project in file("test"))
     publishArtifact := false,
     skip in publish := true
   )
-  .dependsOn(root)
+  .dependsOn(core)
   .dependsOn(jib)
   .enablePlugins(JavaAppPackaging)
