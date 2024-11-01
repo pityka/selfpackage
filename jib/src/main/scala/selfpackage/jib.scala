@@ -7,6 +7,7 @@ import java.io.File
 import scala.collection.JavaConverters._
 import com.google.cloud.tools.jib.api.Jib
 import com.google.cloud.tools.jib.api.buildplan.AbsoluteUnixPath
+import com.google.cloud.tools.jib.api.JibContainer
 
 object jib {
 
@@ -14,7 +15,7 @@ object jib {
       out: Containerizer,
       mainClassNameArg: Option[String] = None,
       base: Option[ImageReference] = None
-  ): Unit = {
+  ): JibContainer = {
     val mainClassName = mainClassNameArg.getOrElse {
       mainClass("main").getOrElse(
         throw new RuntimeException(
@@ -93,7 +94,7 @@ object jib {
 
     java.nio.file.Files.writeString(scriptTmp.toPath(), script)
 
-    Jib
+    val jibContainer = Jib
       .from(
         base.getOrElse(
           ImageReference.of(
@@ -115,6 +116,8 @@ object jib {
 
       scriptTmp.delete()
       jarFromFolders.foreach(_.delete)
+
+      jibContainer
   }
 
 }

@@ -31,6 +31,8 @@ lazy val commonSettings = Seq(
 lazy val root = project.in(file(".")).settings(commonSettings:_*)
 .settings(
   publish/skip := true,
+  publishArtifact := false,
+  mimaPreviousArtifacts := Set.empty,
   name := "selfpackage-root"
 ).aggregate(core,jib)
 
