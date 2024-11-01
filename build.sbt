@@ -41,6 +41,7 @@ lazy val jib = (project in file("jib"))
   .settings(commonSettings: _*)
   .settings(
     name := "selfpackage-jib",
+    mimaPreviousArtifacts := Set.empty,
     libraryDependencies ++= Seq(
      "com.google.cloud.tools" %"jib-core"% "0.27.2"
     )

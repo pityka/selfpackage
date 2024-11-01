@@ -14,4 +14,4 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
-      - run: sbt +test +mimaReportBinaryIssues
+      - run: sbt +test +mimaReportBinaryIssues +jib/mimaReportBinaryIssues
