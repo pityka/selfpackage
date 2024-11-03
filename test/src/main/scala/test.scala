@@ -21,8 +21,9 @@ object MyApp extends App {
       .to(TarImage.at(new java.io.File("me.tar").toPath).named("test"))
       .addEventHandler(
         classOf[LogEvent],
-        (logEvent:LogEvent) => System.out
-          .println(logEvent.getLevel() + ": " + logEvent.getMessage())
+        (logEvent: LogEvent) =>
+          System.out
+            .println(logEvent.getLevel() + ": " + logEvent.getMessage())
       )
   )
   "chmod u+x me" !
