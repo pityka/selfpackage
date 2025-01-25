@@ -15,6 +15,7 @@ jobs:
           distribution: temurin
           java-version: 17
       - uses: olafurpg/setup-gpg@v3
+      - uses: sbt/setup-sbt@v1
       - run: sbt +test +mimaReportBinaryIssues ci-release
         env:
           PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
