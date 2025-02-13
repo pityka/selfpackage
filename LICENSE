@@ -22,6 +22,11 @@ SOFTWARE.
 
 
 -------
+Except the contents of jtar/ which is Copyright 2012 Kamran Zafar, distributed under Apache license. 
+See the source file headers.
+
+------------
+
 Except some bash functions which are modified from sbt-native-packager.
 This is the content of their LICENSE.md file:
 Copyright (c) 2012, Joshua Suereth All rights reserved.

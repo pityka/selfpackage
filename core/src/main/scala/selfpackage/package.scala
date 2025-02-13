@@ -96,28 +96,29 @@ package object selfpackage {
       writeJar(folder, new File(tmp.getAbsolutePath + "." + idx + ".jar"), folder.getAbsolutePath())
     } seq
 
+    // if this is modified then the 249 count must be modified as well
     val selfExtraction = """|#!/usr/bin/env bash
     |set -e 
     |mkdir -p $0-extract 
-    |which -s unzip && : || (echo 'unzip not found' && false)
-    |unzip -o  $0 -d $0-extract 2> /dev/null 1> /dev/null || true
+    |which -s tar && : || (echo 'tar not found' && false)
+    |cat $0 | tail -c +249 | tar -x -C $0-extract 2> /dev/null 1> /dev/null || true
     |chmod u+x $0-extract/entrypoint 
     |exec $0-extract/entrypoint $@
-    """.stripMargin
+    """.stripMargin    
 
     val fos = new BufferedOutputStream(new FileOutputStream(tmp))
     fos.write(selfExtraction.getBytes("UTF-8"))
-    val zos = new ZipOutputStream(fos);
-    zos.setLevel(0)
+    val zos = new org.kamranzafar.jtar.TarOutputStream(fos);
     val libs = (jarFromFolders ++ files).map { file =>
       val br = new BufferedInputStream(new FileInputStream(file))
-
-      zos.putNextEntry(new ZipEntry("lib/" + file.getName));
+      val te = new org.kamranzafar.jtar.TarEntry(file, "lib/" + file.getName)
+      zos.putNextEntry(te);
       copy(br, zos, 8192)
       br.close
-      zos.closeEntry
+      zos.flush()
       "lib/" + file.getName
     }
+    zos.flush()
 
     val scriptFunctions = """
 
@@ -162,10 +163,13 @@ package object selfpackage {
     |exec java $${java_opts[@]} "$${java_args[@]}" -cp $$classpath $mainClassName "$${residual_args[@]}"
     """.stripMargin
 
-    zos.putNextEntry(new ZipEntry("entrypoint"))
-    zos.write(script.getBytes("UTF-8"))
-    zos.closeEntry
-    zos.close
+    val ba = script.getBytes("UTF-8")
+    val th = org.kamranzafar.jtar.TarHeader.createHeader("entrypoint", ba.length, 1, false, 0x777);
+    val te = new org.kamranzafar.jtar.TarEntry(th)
+    zos.putNextEntry(te)
+    zos.write(ba)
+    zos.flush()
+    zos.close()
     fos.close
     Files.copy(tmp.toPath, out.toPath, StandardCopyOption.REPLACE_EXISTING)
 
