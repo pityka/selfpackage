@@ -100,11 +100,11 @@ package object selfpackage {
     val selfExtraction = """|#!/usr/bin/env bash
     |set -e 
     |mkdir -p $0-extract 
-    |which -s tar && : || (echo 'tar not found' && false)
-    |cat $0 | tail -c +249 | tar -x -C $0-extract 2> /dev/null 1> /dev/null || true
+    |tail -c +190 $0 | tar -x -C $0-extract 2> /dev/null 1> /dev/null || true
     |chmod u+x $0-extract/entrypoint 
     |exec $0-extract/entrypoint $@
-    """.stripMargin    
+    """.stripMargin 
+
 
     val fos = new BufferedOutputStream(new FileOutputStream(tmp))
     fos.write(selfExtraction.getBytes("UTF-8"))
