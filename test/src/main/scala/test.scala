@@ -23,7 +23,8 @@ object MyApp extends App {
         classOf[LogEvent],
         (logEvent:LogEvent) => System.out
           .println(logEvent.getLevel() + ": " + logEvent.getMessage())
-      )
+      ),
+      pathInContainer = "/opt"
   )
   "chmod u+x me" !
 }

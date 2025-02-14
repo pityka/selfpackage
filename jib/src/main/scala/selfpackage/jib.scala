@@ -14,8 +14,10 @@ object jib {
   def containerize(
       out: Containerizer,
       mainClassNameArg: Option[String] = None,
-      base: Option[ImageReference] = None
+      base: Option[ImageReference] = None,
+      pathInContainer: String = "/app/"
   ): JibContainer = {
+    require(pathInContainer.startsWith("/"))    
     val mainClassName = mainClassNameArg.getOrElse {
       mainClass("main").getOrElse(
         throw new RuntimeException(
@@ -105,13 +107,13 @@ object jib {
           )
         )
       )
-      .addLayer(libs.map(_.toPath).asJava, AbsoluteUnixPath.get("/app/lib/"))
+      .addLayer(libs.map(_.toPath).asJava, AbsoluteUnixPath.get(s"$pathInContainer/lib/"))
       .addLayer(
         snapshots.map(_.toPath).asJava,
-        AbsoluteUnixPath.get("/app/snapshots/")
+        AbsoluteUnixPath.get(s"$pathInContainer/snapshots/")
       )
-      .addLayer(List(scriptTmp.toPath).asJava, AbsoluteUnixPath.get("/app/"))
-      .setEntrypoint("bash", "/app/entrypoint.sh")
+      .addLayer(List(scriptTmp.toPath).asJava, AbsoluteUnixPath.get(s"$pathInContainer/"))
+      .setEntrypoint("bash", s"$pathInContainer/entrypoint.sh")
       .containerize(out);
 
       scriptTmp.delete()
