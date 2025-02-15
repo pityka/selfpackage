@@ -93,7 +93,11 @@ package object selfpackage {
     val folders = classpathFilesOrFolders.filter(_.isDirectory)
 
     val jarFromFolders = folders.zipWithIndex.par.map { case (folder, idx) =>
-      writeJar(folder, new File(tmp.getAbsolutePath + "." + idx + ".jar"), folder.getAbsolutePath())
+      writeJar(
+        folder,
+        new File(tmp.getAbsolutePath + "." + idx + ".jar"),
+        folder.getAbsolutePath()
+      )
     } seq
 
     // if this is modified then the 249 count must be modified as well
@@ -103,8 +107,7 @@ package object selfpackage {
     |tail -c +190 $0 | tar -x -C $0-extract 2> /dev/null 1> /dev/null || true
     |chmod u+x $0-extract/entrypoint 
     |exec $0-extract/entrypoint $@
-    """.stripMargin 
-
+    """.stripMargin
 
     val fos = new BufferedOutputStream(new FileOutputStream(tmp))
     fos.write(selfExtraction.getBytes("UTF-8"))
@@ -164,7 +167,13 @@ package object selfpackage {
     """.stripMargin
 
     val ba = script.getBytes("UTF-8")
-    val th = org.kamranzafar.jtar.TarHeader.createHeader("entrypoint", ba.length, 1, false, 0x777);
+    val th = org.kamranzafar.jtar.TarHeader.createHeader(
+      "entrypoint",
+      ba.length,
+      1,
+      false,
+      0x777
+    );
     val te = new org.kamranzafar.jtar.TarEntry(th)
     zos.putNextEntry(te)
     zos.write(ba)

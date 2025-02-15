@@ -18,23 +18,27 @@ lazy val commonSettings = Seq(
   scalaVersion := "2.13.13",
   crossScalaVersions := Seq("2.13.13", "3.3.3"),
   mimaPreviousArtifacts := (scalaVersion.value match {
-    case "2.13.13" => Set(
-    organization.value %% moduleName.value % "1.2.5"
-  )
-  case "3.3.3" => Set.empty
-  }) ,
+    case "2.13.13" =>
+      Set(
+        organization.value %% moduleName.value % "1.2.5"
+      )
+    case "3.3.3" => Set.empty
+  }),
   libraryDependencies ++= List(
     "org.scala-lang.modules" %% "scala-parallel-collections" % "1.0.4"
   )
 )
 
-lazy val root = project.in(file(".")).settings(commonSettings:_*)
-.settings(
-  publish/skip := true,
-  publishArtifact := false,
-  mimaPreviousArtifacts := Set.empty,
-  name := "selfpackage-root"
-).aggregate(core,jib)
+lazy val root = project
+  .in(file("."))
+  .settings(commonSettings: _*)
+  .settings(
+    publish / skip := true,
+    publishArtifact := false,
+    mimaPreviousArtifacts := Set.empty,
+    name := "selfpackage-root"
+  )
+  .aggregate(core, jib)
 
 lazy val core = (project in file("core"))
   .settings(commonSettings: _*)
@@ -51,9 +55,10 @@ lazy val jib = (project in file("jib"))
     name := "selfpackage-jib",
     mimaPreviousArtifacts := Set.empty,
     libraryDependencies ++= Seq(
-     "com.google.cloud.tools" %"jib-core"% "0.27.2"
+      "com.google.cloud.tools" % "jib-core" % "0.27.2"
     )
-  ).dependsOn(core)
+  )
+  .dependsOn(core)
 
 lazy val testProject = (project in file("test"))
   .settings(commonSettings: _*)
