@@ -17,7 +17,7 @@ object jib {
       base: Option[ImageReference] = None,
       pathInContainer: String = "/app/"
   ): JibContainer = {
-    require(pathInContainer.startsWith("/"))    
+    require(pathInContainer.startsWith("/"))
     val mainClassName = mainClassNameArg.getOrElse {
       mainClass("main").getOrElse(
         throw new RuntimeException(
@@ -92,7 +92,7 @@ object jib {
     val tmpFolder = java.io.File.createTempFile("entrypoint", "folder")
     tmpFolder.delete()
     assert(tmpFolder.mkdir())
-    val scriptTmp = new File(tmpFolder,"entrypoint.sh")
+    val scriptTmp = new File(tmpFolder, "entrypoint.sh")
 
     java.nio.file.Files.writeString(scriptTmp.toPath(), script)
 
@@ -107,19 +107,25 @@ object jib {
           )
         )
       )
-      .addLayer(libs.map(_.toPath).asJava, AbsoluteUnixPath.get(s"$pathInContainer/lib/"))
+      .addLayer(
+        libs.map(_.toPath).asJava,
+        AbsoluteUnixPath.get(s"$pathInContainer/lib/")
+      )
       .addLayer(
         snapshots.map(_.toPath).asJava,
         AbsoluteUnixPath.get(s"$pathInContainer/snapshots/")
       )
-      .addLayer(List(scriptTmp.toPath).asJava, AbsoluteUnixPath.get(s"$pathInContainer/"))
+      .addLayer(
+        List(scriptTmp.toPath).asJava,
+        AbsoluteUnixPath.get(s"$pathInContainer/")
+      )
       .setEntrypoint("bash", s"$pathInContainer/entrypoint.sh")
       .containerize(out);
 
-      scriptTmp.delete()
-      jarFromFolders.foreach(_.delete)
+    scriptTmp.delete()
+    jarFromFolders.foreach(_.delete)
 
-      jibContainer
+    jibContainer
   }
 
 }
